@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+  <title>XHTTP 一键搭建</title>
+  <style>
+    :root{color-scheme:light dark;--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#dde3ef;--primary:#315fea;--ok:#16865c;--warn:#a05a00;--danger:#b42318;--shadow:0 18px 50px rgba(23,32,51,.08)}
+    @media(prefers-color-scheme:dark){:root{--bg:#10131a;--card:#181d27;--text:#eef2fa;--muted:#a7b0c2;--line:#303849;--primary:#79a0ff;--ok:#57d39d;--warn:#ffc46b;--danger:#ff8d85;--shadow:none}}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 system-ui,-apple-system,"PingFang SC",sans-serif}.shell{max-width:1040px;margin:auto;padding:28px 20px 60px}.hero{padding:28px;border-radius:22px;background:linear-gradient(135deg,#182a57,#315fea);color:#fff;box-shadow:var(--shadow)}.hero h1{margin:0 0 8px;font-size:30px}.hero p{margin:0;max-width:720px;opacity:.86}.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.badge{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.13);font-size:13px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}@media(max-width:760px){.grid{grid-template-columns:1fr}}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow)}.card.full{grid-column:1/-1}.title{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:18px}.step{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--primary);color:#fff;font-weight:700}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:560px){.row{grid-template-columns:1fr}}label{display:block;margin:10px 0 5px;color:var(--muted);font-size:13px}input{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:transparent;color:var(--text);font:inherit;outline:none}input:focus{border-color:var(--primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 18%,transparent)}button{border:0;border-radius:10px;padding:10px 14px;font:600 14px system-ui;cursor:pointer;background:var(--primary);color:#fff}button.secondary{background:transparent;color:var(--primary);border:1px solid var(--line)}button:disabled{opacity:.5;cursor:wait}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.hint{color:var(--muted);font-size:13px;margin:8px 0}.notice{border-left:3px solid var(--warn);padding:9px 12px;background:color-mix(in srgb,var(--warn) 9%,transparent);border-radius:4px 10px 10px 4px;color:var(--muted)}.launch{display:flex;align-items:center;justify-content:space-between;gap:20px}.launch button{padding:13px 22px;font-size:16px}.status{margin-top:14px;padding:14px;border:1px dashed var(--line);border-radius:12px;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--muted);min-height:52px}.status.ok{border-color:var(--ok);color:var(--ok)}.status.error{border-color:var(--danger);color:var(--danger)}.result{display:none;margin-top:16px}.result.show{display:block}.secret{font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;max-height:180px;overflow:auto;overflow-wrap:anywhere}.copy{margin-top:8px}.small{font-size:12px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <h1>XHTTP 上下行分离 · 一键搭建</h1>
+      <p>登录 AWS 和 Cloudflare，填写 VPS 的 SSH 信息。程序会自动完成 DNS、TLS、Xray、443 分流、CloudFront 和真实连通性验证。</p>
+      <div class="badges"><span class="badge">Cloudflare 上行</span><span class="badge">CloudFront 下行</span><span class="badge">SSH 直连 VPS</span><span class="badge">不保存 SSH 密码</span></div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2 class="title"><span class="step">1</span>登录云平台</h2>
+        <div class="actions"><button id="awsLogin">登录 AWS</button><button id="cfLogin" class="secondary">登录 Cloudflare</button><button id="refresh" class="secondary">刷新状态</button></div>
+        <label for="cfToken">Cloudflare API Token（OAuth 不可用时）</label>
+        <input id="cfToken" type="password" autocomplete="off" placeholder="需要 Zone:Read、DNS:Edit、SSL/TLS:Edit 权限">
+        <div class="actions"><button id="saveToken" class="secondary">Token 登录</button></div>
+        <p class="hint">AWS 使用临时登录；Cloudflare Token 只保存在当前电脑。</p>
+      </article>
+
+      <article class="card">
+        <h2 class="title"><span class="step">2</span>连接 VPS</h2>
+        <div class="row"><div><label for="sshHost">VPS 地址</label><input id="sshHost" placeholder="203.0.113.10"></div><div><label for="sshPort">SSH 端口</label><input id="sshPort" type="number" value="22"></div></div>
+        <div class="row"><div><label for="sshUser">SSH 用户</label><input id="sshUser" value="root"></div><div><label for="sshKey">私钥路径（推荐）</label><input id="sshKey" placeholder="~/.ssh/id_ed25519"></div></div>
+        <label for="sshPassword">SSH 密码（可选，不保存）</label><input id="sshPassword" type="password" autocomplete="off" placeholder="使用密钥或 ssh-agent 时留空">
+        <div class="actions"><button id="testSsh" class="secondary">测试 SSH</button></div>
+        <p class="hint">需要 root，或具备免密 sudo 的普通用户。支持 Ubuntu/Debian。</p>
+      </article>
+
+      <article class="card full">
+        <h2 class="title"><span class="step">3</span>线路信息</h2>
+        <div class="row"><div><label for="upstream">Cloudflare 上行域名</label><input id="upstream" placeholder="xhttp.example.com"></div><div><label for="origin">CloudFront 源站域名</label><input id="origin" placeholder="origin-xhttp.example.com"></div></div>
+        <div class="row"><div><label for="uuid">UUID</label><input id="uuid"></div><div><label for="xPath">XHTTP 路径</label><input id="xPath"></div></div>
+        <div class="row"><div><label for="remark">节点名称</label><input id="remark" value="XHTTP Split"></div><div><label for="awsProfile">AWS Profile</label><input id="awsProfile" value="fabushi-xhttp"></div></div>
+        <div class="actions"><button id="randomize" class="secondary">重新生成 UUID 和路径</button><button id="preview" class="secondary">预览执行计划</button></div>
+      </article>
+
+      <article class="card full">
+        <div class="launch">
+          <div><h2 class="title" style="margin-bottom:5px"><span class="step">4</span>开始搭建</h2><p class="notice">会修改 DNS、VPS 网络服务并创建按量计费的 CloudFront 分发；AWS WAF 不会启用。</p></div>
+          <button id="setup">一键搭建并验证</button>
+        </div>
+        <div id="status" class="status">请先登录云平台，并测试 SSH。</div>
+        <div id="result" class="result">
+          <h3>搭建成功</h3>
+          <p id="summary"></p>
+          <div id="importLink" class="secret"></div>
+          <button id="copyLink" class="secondary copy">复制导入链接</button>
+          <p class="small">导入链接包含 UUID，请勿公开分享。</p>
+        </div>
+      </article>
+    </section>
+  </main>
+  <script>
+    let rpcId=1;const pending=new Map();
+    addEventListener('message',event=>{const m=event.data;if(!m||m.jsonrpc!=='2.0'||m.id===undefined)return;const job=pending.get(m.id);if(!job)return;pending.delete(m.id);m.error?job.reject(new Error(m.error.message)):job.resolve(m.result)});
+    function callTool(name,args={}){const id=rpcId++;parent.postMessage({jsonrpc:'2.0',id,method:'tools/call',params:{name,arguments:args}},'*');return new Promise((resolve,reject)=>pending.set(id,{resolve,reject}))}
+    function data(result){if(result&&result.structuredContent)return result.structuredContent;const text=result?.content?.find?.(x=>x.type==='text')?.text;return text?JSON.parse(text):result}
+    const $=id=>document.getElementById(id);const status=$('status');
+    function setStatus(text,type=''){status.textContent=text;status.className='status '+type}
+    function randomize(){
+      $('uuid').value=crypto.randomUUID();const bytes=new Uint8Array(12);crypto.getRandomValues(bytes);$('xPath').value='/'+[...bytes].map(x=>x.toString(16).padStart(2,'0')).join('')+'/';
+    }
+    function form(includePassword=true){return{sshHost:$('sshHost').value.trim(),sshPort:Number($('sshPort').value||22),sshUser:$('sshUser').value.trim()||'root',sshIdentityFile:$('sshKey').value.trim(),sshPassword:includePassword?$('sshPassword').value:'',upstreamDomain:$('upstream').value.trim(),originDomain:$('origin').value.trim(),uuid:$('uuid').value.trim(),path:$('xPath').value.trim(),remark:$('remark').value.trim(),awsProfile:$('awsProfile').value.trim()||'fabushi-xhttp'}}
+    async function busy(button,fn){button.disabled=true;try{return await fn()}catch(e){setStatus(e.message,'error');throw e}finally{button.disabled=false}}
+    $('awsLogin').onclick=()=>busy($('awsLogin'),async()=>{setStatus('正在打开 AWS 登录…');const r=data(await callTool('xhttp_aws_login',{profile:$('awsProfile').value||'fabushi-xhttp'}));setStatus(r.message||JSON.stringify(r,null,2),r.ok?'ok':'error')});
+    $('cfLogin').onclick=()=>busy($('cfLogin'),async()=>{setStatus('正在打开 Cloudflare 登录…');const r=data(await callTool('xhttp_cloudflare_login'));setStatus(r.message||JSON.stringify(r,null,2),r.ok?'ok':'error')});
+    $('saveToken').onclick=()=>busy($('saveToken'),async()=>{const r=data(await callTool('xhttp_cloudflare_token',{token:$('cfToken').value}));$('cfToken').value='';setStatus(r.message,'ok')});
+    $('refresh').onclick=()=>busy($('refresh'),async()=>{const r=data(await callTool('xhttp_status'));setStatus(`AWS：${r.aws?.authenticated?'已登录':'未登录'}\nCloudflare：${r.cloudflare?.authenticated?'已登录':'未登录'}\nSSH 密码：不会保存`,r.aws?.authenticated&&r.cloudflare?.authenticated?'ok':'')});
+    $('testSsh').onclick=()=>busy($('testSsh'),async()=>{setStatus('正在通过 SSH 检查 VPS…');const r=data(await callTool('xhttp_ssh_status',form()));setStatus(`SSH 成功：${r.os} / ${r.arch}\n公网 IP：${r.publicIp}\n443：${r.port443}\n可用空间：${(r.diskFreeBytes/1073741824).toFixed(1)} GB`,'ok')});
+    $('randomize').onclick=randomize;
+    $('preview').onclick=()=>busy($('preview'),async()=>{setStatus('正在生成计划…');const r=data(await callTool('xhttp_plan',form()));setStatus(r.steps.map((x,i)=>`${i+1}. ${x.action}`).join('\n'))});
+    $('setup').onclick=()=>busy($('setup'),async()=>{
+      if(!confirm('确认创建 Cloudflare DNS、修改 VPS 网络服务并创建按量计费的 CloudFront 分发？'))return;
+      setStatus('正在一键搭建。证书签发和 CloudFront 部署可能需要 10–20 分钟，请不要关闭小程序…');$('result').className='result';
+      const r=data(await callTool('xhttp_setup',{...form(),confirmation:'创建 XHTTP 线路'}));$('sshPassword').value='';
+      setStatus('完整链路已通过真实代理访问验证。','ok');$('result').className='result show';$('summary').textContent=`上行 ${r.settings.upstreamDomain}；下行 ${r.download.domainName}；CloudFront ${r.download.status}`;$('importLink').textContent=r.importLink;window.lastImportLink=r.importLink;
+    });
+    $('copyLink').onclick=async()=>{await navigator.clipboard.writeText(window.lastImportLink||'');$('copyLink').textContent='已复制'};
+    randomize();
+  </script>
+</body>
+</html>

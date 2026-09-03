@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "supportedPlatforms": ["cli", "desktop"],
+  "runtime": {
+    "cli": {
+      "executable": "./scripts/xhttp-split.mjs"
+    }
+  },
+  "miniapp": {
+    "entry": "./ui/index.html",
+    "bridgeVersion": "1.0",
+    "permissions": [
+      "mcp.call",
+      "storage.local",
+      "browser.open",
+      "cloud.aws",
+      "cloud.cloudflare",
+      "network.ssh"
+    ]
+  },
+  "commands": [
+    { "name": "status", "tool": "xhttp_status" },
+    { "name": "aws-login", "tool": "xhttp_aws_login" },
+    { "name": "cloudflare-login", "tool": "xhttp_cloudflare_login" },
+    { "name": "cloudflare-token", "tool": "xhttp_cloudflare_token" },
+    { "name": "ssh-status", "tool": "xhttp_ssh_status" },
+    { "name": "plan", "tool": "xhttp_plan" },
+    { "name": "setup", "tool": "xhttp_setup" },
+    { "name": "apply", "tool": "xhttp_apply" },
+    { "name": "client", "tool": "xhttp_client_config" }
+  ]
+}

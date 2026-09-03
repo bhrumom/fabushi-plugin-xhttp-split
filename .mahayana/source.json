@@ -1,0 +1,8 @@
+{
+  "provider": "github",
+  "repository": "bhrumom/fabushi-plugin-xhttp-split",
+  "repositoryId": 1355541675,
+  "defaultBranch": "main",
+  "license": "Proprietary",
+  "subdirectory": "."
+}

@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "xhttp-split-local": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["./scripts/xhttp-split.mjs", "mcp-serve"],
+      "cwd": "."
+    }
+  }
+}

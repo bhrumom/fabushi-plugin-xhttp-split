@@ -1,0 +1,38 @@
+{
+  "name": "xhttp-split",
+  "version": "0.2.0+codex.20260811090326",
+  "description": "\u767b\u5f55 AWS \u548c Cloudflare \u540e\uff0c\u901a\u8fc7 SSH \u4e00\u952e\u914d\u7f6e XHTTP \u4e0a\u4e0b\u884c\u5206\u79bb\u3002",
+  "author": {
+    "name": "Fabushi"
+  },
+  "homepage": "https://fabushi.ombhrum.com/miniapps/xhttp-split",
+  "license": "Proprietary",
+  "keywords": [
+    "xhttp",
+    "xray",
+    "cloudfront",
+    "cloudflare",
+    "vps"
+  ],
+  "mcpServers": "./.mcp.json",
+  "apps": "./.app.json",
+  "interface": {
+    "displayName": "XHTTP \u4e0a\u4e0b\u884c\u5206\u79bb",
+    "shortDescription": "\u767b\u5f55\u4e91\u8d26\u53f7\u3001\u586b\u5199 SSH\uff0c\u4e00\u952e\u642d\u5efa\u5e76\u9a8c\u8bc1 XHTTP \u5206\u79bb\u7ebf\u8def\u3002",
+    "longDescription": "\u4f7f\u7528 AWS CLI \u4e34\u65f6\u767b\u5f55\u3001Cloudflare OAuth/API Token \u548c\u76f4\u63a5 SSH \u8fde\u63a5\uff0c\u81ea\u52a8\u5b8c\u6210 DNS\u3001TLS\u3001Xray\u3001443 SNI \u5206\u6d41\u3001CloudFront \u4e0e\u771f\u5b9e\u4ee3\u7406\u9a8c\u8bc1\u3002SSH \u5bc6\u7801\u53ea\u7528\u4e8e\u5f53\u6b21\u8fde\u63a5\uff0c\u4e0d\u4f1a\u4fdd\u5b58\u3002",
+    "developerName": "Fabushi",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://fabushi.ombhrum.com/",
+    "defaultPrompt": [
+      "\u68c0\u67e5 AWS\u3001Cloudflare \u548c SSH \u662f\u5426\u5df2\u7ecf\u5c31\u7eea",
+      "\u9884\u89c8 SSH \u4e00\u952e\u642d\u5efa XHTTP \u7684\u6267\u884c\u8ba1\u5212",
+      "\u4e00\u952e\u642d\u5efa\u5e76\u9a8c\u8bc1 XHTTP \u4e0a\u4e0b\u884c\u5206\u79bb"
+    ],
+    "brandColor": "#4F7DF3"
+  }
+}
